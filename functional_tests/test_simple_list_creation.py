@@ -1,23 +1,12 @@
 #!/usr/bin/env python
 
-from django.test import LiveServerTestCase
+from .base import FunctionalTest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from unittest import skip
 
-class NewVisitorTest(LiveServerTestCase):
-    """"""
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(3)
 
-    def tearDown(self):
-        self.browser.quit()
-
-    def check_for_row_in_list_table(self, row_text):
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn(row_text, [row.text for row in rows])
-        
+class NewVisitorTest(FunctionalTest):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # Edith has heard about a cool new online to-do app. She goes
@@ -52,13 +41,13 @@ class NewVisitorTest(LiveServerTestCase):
         #            table.text,
         #            )
         #)
-        
+
         # There is still a text box inviting her to add another item. She
         # enter "Use peacock feathers to make a fly" (Edith is very methodical)
         inputbox = self.browser.find_element_by_id('id_new_item')
         inputbox.send_keys('Use peacock feathers to make a fly')
         inputbox.send_keys(Keys.ENTER)
-        
+
         # The page updates again, and now show both items on her list
         print(self.browser.current_url)
         self.check_for_row_in_list_table('1: Buy peacock feathers')
@@ -90,28 +79,3 @@ class NewVisitorTest(LiveServerTestCase):
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertIn('Buy milk', page_text)
-
-        #self.fail('Finish the test!')
-    def test_layout_and_styling(self):
-        """"""
-        # Edith goes to the home page
-        print(self.live_server_url)
-        self.browser.get(self.live_server_url)
-        self.browser.set_window_size(1024, 768)
-
-        # She notices the input box is nicely centered
-        inputbox = self.browser.find_element_by_tag_name('input')
-        # 误差3pixels
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512,
-            delta=3
-        )
-        inputbox.send_keys('testing\n')
-        inputbox = self.browser.find_element_by_tag_name('input')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512,
-            delta=3
-        )
-
