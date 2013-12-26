@@ -30,7 +30,7 @@ class ItemValidationTest(FunctionalTest):
 
         # She receives a similar warning on the list page
         self.check_for_row_in_list_table('1: some text here.')
-        error_p = self.browser.find_element_by_css_selector('.has_error')
+        error_p = self.browser.find_element_by_css_selector('.has-error')
         self.assertEqual(error_p.text, "You can't have an empty list item.")
 
         # And she can correct it by filling some text in
