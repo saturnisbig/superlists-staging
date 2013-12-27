@@ -39,7 +39,7 @@ class ListAndItemModelsTest(TestCase):
         item = Item(list=list1, text='')
         with self.assertRaises(ValidationError):
             item.save()
-            item.full_clean()
+            #item.full_clean()
 
     def test_get_absolute_url(self):
         list1 = List.objects.create()
