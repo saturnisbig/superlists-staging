@@ -1,4 +1,5 @@
 from django.shortcuts import redirect, render
+from django.core.exceptions import ValidationError
 
 from lists.models import Item, List
 from lists.forms import ItemForm
@@ -15,9 +16,11 @@ def view_list(request, list_id):
     if request.method == 'POST':
         form = ItemForm(data=request.POST or None)
         if form.is_valid():
-            form.save(for_list=list_)
-            return redirect(list_)
-
+            try:
+                form.save(for_list=list_)
+                return redirect(list_)
+            except ValidationError:
+                form.errors.update({'text': "You're already got this in your list"})
     return render(request, 'list.html', {'list': list_, 'form': form})
 
 
@@ -29,4 +32,3 @@ def new_list(request):
         return redirect(list_)
     else:
         return render(request, 'home.html', {'form': form})
-
